@@ -1,6 +1,6 @@
 # always-tail
 
-Node.js module for continuosuly tailing a file.
+Node.js module for continuously tailing a file.
 
 Survives truncates, file rollovers (e.g. `mv /var/log/test /var/log/test.1`), and unlink.
 
