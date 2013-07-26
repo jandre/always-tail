@@ -161,11 +161,12 @@ Tail = (function(_super) {
     };
 
     // close any legacy fds 
-    _.each(self.queue, function(item) {
+    for (var i in self.queue) {
+      var item = self.queue[i];
       if (item.type == 'close') {
         fs.close(item.fd); 
       };
-    });
+    };
 
     self.queue = [];
   };

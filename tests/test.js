@@ -18,3 +18,7 @@ t.on('error', function(data) {
 });
 
 t.watch();
+
+setTimeout(function() {
+  t.unwatch();
+}, 1000);
