@@ -46,8 +46,11 @@ var tail = new Tail(filename, separator, options);
 ```
 
 `filename` - filename to monitor
+
 `separator` - optional separator for each line (default: \n)
+
 `options.interval` - optional interval to check for changes
+
 `options.start` - optional start byte to start reading from 
 
 ## Credits
