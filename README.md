@@ -12,7 +12,7 @@ It emits a 'line' event when a new line is read.
 
 ## Installation
 
-npm install always-tail
+`npm install always-tail`
 
 ## Example
 
