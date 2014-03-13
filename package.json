@@ -1,6 +1,6 @@
 {
   "name": "always-tail",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "continuous file tail. robust enough to survive rollovers.",
   "main": "index.js",
   "scripts": {
