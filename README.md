@@ -22,7 +22,7 @@ var Tail = require('always-tail');
 var fs = require('fs');
 var filename = "/tmp/testlog";
 
-if (!fs.existsSync()) fs.writeFileSync(filename, "");
+if (!fs.existsSync(filename)) fs.writeFileSync(filename, "");
 
 var tail = new Tail(filename, '\n');
 
