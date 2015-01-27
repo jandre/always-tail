@@ -119,17 +119,16 @@ Tail = (function(_super) {
     this.inode = 0;
     this.bookmarks = {};
 
-    if (!fs.existsSync(this.filename)) 
-      throw "Filename is missing: " + this.filename;
-
-    this.fd = fs.openSync(this.filename, 'r');
-    var stat = fs.statSync(this.filename);
-    this.inode = stat.ino; 
-    this.bookmarks[this.fd] = 0;
-
-    if (this.options.start && this.fd) {
-      this.bookmarks[this.fd] = this.options.start;
-    };
+    if (fs.existsSync(this.filename)) { 
+      this.fd = fs.openSync(this.filename, 'r');
+      var stat = fs.statSync(this.filename);
+      this.inode = stat.ino;
+      if (this.options.hasOwnProperty('start')) {
+        this.bookmarks[this.fd] = this.options.start
+      } else {
+        this.bookmarks[this.fd] = stat.size;
+      }
+    }
 
     setTimeout(function() {
       self.watch();
