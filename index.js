@@ -45,7 +45,7 @@ Tail = (function(_super) {
         if (end < start) {
           // file was truncated
           debug('file was truncated:', self.filename);
-          start = 0;
+          self.bookmarks[block.fd] = start = 0;
         };
 
         var size = end - start;
