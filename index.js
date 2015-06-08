@@ -50,6 +50,11 @@ Tail = (function(_super) {
 
         var size = end - start;
         if (size == 0) return next(); // no data.
+        if (size > self.blockSize) {
+          debug('block is too large, recreasing to ', self.blockSize);
+          size = self.blockSize;
+          self.queue.push(block); // for future data processing
+        }
 
         var buffer = new Buffer(size);
 
@@ -113,7 +118,8 @@ Tail = (function(_super) {
       return self.readBlock();
     });
 
-    this.interval = options.interval || 5000; 
+    this.interval = options.interval || 5000;
+    this.blockSize = options.blockSize || 1024 * 1024; // 1 MB by default
    
     this.fd = null;
     this.inode = 0;
