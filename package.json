@@ -11,6 +11,12 @@
     "tail"
   ],
   "author": "Jen Andre <jandre@gmail.com>",
+  "contributors": [
+  { 
+    "name": "Artur Kraev", 
+    "email": "ravenox@gmail.com"
+  }
+  ],
   "license": "MIT",
   "dependencies": {
     "debug": "~0.7.2"
