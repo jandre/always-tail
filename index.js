@@ -60,7 +60,6 @@ Tail = (function(_super) {
 
         debug("reading:", block.fd, size, start);
         fs.read(block.fd, buffer, 0, size, start, function(err, bytesRead, buff) {
-          var chunk, parts, _i, _len, _results;
 
           if (err) { return self.emit('error', err); };
 
@@ -68,14 +67,13 @@ Tail = (function(_super) {
 
           self.bookmarks[block.fd] += bytesRead;
           buff = buff.toString("utf-8");
-          self.buffer += buff;
-          parts = self.buffer.split(self.separator);
-          self.buffer = parts.pop();
-
-          _results = [];
-          for (_i = 0, _len = parts.length; _i < _len; _i++) {
-            chunk = parts[_i];
-            _results.push(self.emit("line", chunk));
+          if (self.emit_type == 'lines') {
+              self.emit('lines', buff);
+          } else {
+            self.buffer += buff;
+            var parts = self.buffer.split(self.separator);
+            self.buffer = parts.pop();
+            parts.map(function(chunk) { self.emit('line', chunk); });
           }
           next();
         });
@@ -100,6 +98,7 @@ Tail = (function(_super) {
    * @param {Object} options options object
    * @param {Integer} options.start (optional) start offset to read data from file, default: 0
    * @param {Integer} options.interval (optional) interval to monitor for changes, default: 5000ms 
+   * @param {String} options.emit_type (optional) emit line by line or blocks of line, default: 'line'
    *
    */
   function Tail(filename, separator, options) {
@@ -119,6 +118,7 @@ Tail = (function(_super) {
     });
 
     this.interval = options.interval || 5000;
+    this.emit_type = options.emit_type || 'line';
     this.blockSize = options.blockSize || 1024 * 1024; // 1 MB by default
    
     this.fd = null;
