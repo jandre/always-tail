@@ -75,7 +75,7 @@ Tail = (function(_super) {
           _results = [];
           for (_i = 0, _len = parts.length; _i < _len; _i++) {
             chunk = parts[_i];
-            _results.push(self.emit("line", chunk));
+            _results.push(self.emit("line", chunk, self.filename));
           }
           next();
         });
