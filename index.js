@@ -39,6 +39,10 @@ Tail = (function(_super) {
 
         if (err) { return next(); };
 
+        if(!start) {
+            return next();
+        }
+
         var start = self.bookmarks[block.fd];
         var end = stat.size;
   
