@@ -39,7 +39,8 @@ Tail = (function(_super) {
 
         if (err) { return next(); };
 
-        if(!start) {
+        // self-protection, start may be undefined, race condition??
+        if(typeof start === 'undefined') {
             return next();
         }
 
