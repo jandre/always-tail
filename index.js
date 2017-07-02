@@ -42,15 +42,15 @@ Tail = (function(_super) {
       fs.fstat(block.fd, function(err, stat) {
 
         if (err) { return next(); };
+        
+        var start = self.bookmarks[block.fd];
+        var end = stat.size;
 
         // self-protection, start may be undefined or NaN, race condition??
         if(typeof start === 'undefined' || isNaN(start)) {
-            return next();
+          return next();
         }
-
-        var start = self.bookmarks[block.fd];
-        var end = stat.size;
-  
+        
         if (end < start) {
           // file was truncated
           debug('file was truncated:', self.filename);
