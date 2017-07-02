@@ -24,7 +24,11 @@ Tail = (function(_super) {
     var next = function() {
 
       if (block.type == 'close') {
-        fs.close(block.fd);
+        try {
+          fs.close(block.fd);
+        } catch(err) {
+          console.log("FAILED TO CLOSE FD:", err, err.stack);
+        }
         delete self.bookmarks[block.fd];
       };
 
@@ -38,10 +42,15 @@ Tail = (function(_super) {
       fs.fstat(block.fd, function(err, stat) {
 
         if (err) { return next(); };
-
+        
         var start = self.bookmarks[block.fd];
         var end = stat.size;
-  
+
+        // self-protection, start may be undefined or NaN, race condition??
+        if(typeof start === 'undefined' || isNaN(start)) {
+          return next();
+        }
+        
         if (end < start) {
           // file was truncated
           debug('file was truncated:', self.filename);
@@ -161,7 +170,12 @@ Tail = (function(_super) {
     };
     
     if (self.fd) {
-      fs.close(self.fd); 
+      try {
+        fs.close(self.fd);  
+      } catch(err) {
+        console.log("FAILED TO CLOSE FD:", err, err.stack);
+      }
+       
       self.fd = null;
     };
 
@@ -169,7 +183,11 @@ Tail = (function(_super) {
     for (var i in self.queue) {
       var item = self.queue[i];
       if (item.type == 'close') {
-        fs.close(item.fd); 
+        try {
+          fs.close(item.fd);
+        } catch (err) {
+          console.log("FAILED TO CLOSE FD:", err, err.stack);
+        }
       };
     };
 
@@ -222,9 +240,13 @@ Tail = (function(_super) {
          if (self.fd == null) {
            fs.exists(self.filename, function(exists) {
              if (exists) {
-               self.fd = fs.openSync(self.filename, 'r');
-               self.inode = curr.ino;
-               self.bookmarks[self.fd] = 0;
+               try {
+                 self.fd = fs.openSync(self.filename, 'r');
+                 self.inode = curr.ino;
+                 self.bookmarks[self.fd] = 0;
+               } catch(err) {
+                 // race condition, file is removed between exists function and openSync function
+               }
              }
              callback();
            });
