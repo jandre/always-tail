@@ -161,7 +161,11 @@ Tail = (function(_super) {
     };
     
     if (self.fd) {
-      fs.close(self.fd); 
+      /**
+       * Fix for TypeError [ERR_INVALID_CALLBACK]: Callback must be a function. Received undefined,
+       * when unwatch() is called on tail object
+       */
+      fs.close(self.fd, function() {}); 
       self.fd = null;
     };
 
@@ -169,7 +173,11 @@ Tail = (function(_super) {
     for (var i in self.queue) {
       var item = self.queue[i];
       if (item.type == 'close') {
-        fs.close(item.fd); 
+      /**
+       * Fix for TypeError [ERR_INVALID_CALLBACK]: Callback must be a function. Received undefined,
+       * when unwatch() is called on tail object
+       */
+       fs.close(item.fd, function() {}); 
       };
     };
 
